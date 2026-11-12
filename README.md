@@ -112,7 +112,8 @@ Wrong chart? Open an issue with the airport, chart name and what's off (a screen
 
 ## License
 
-- **Source code** (everything in this repository except `assets/` fonts): [MIT](LICENSE).
+- **Source code** (everything in this repository except `assets/` fonts): [GNU AGPL-3.0](LICENSE). Any copy, fork or modified version, including one offered as an online service, must stay open source under the AGPL with full source available, and keep the copyright notices. See [NOTICE](NOTICE).
+- **Name:** "OpenPlates" may not be used for modified versions without permission.
 - **Charts** (the chart bundle shipped in the official release, and images exported from it): © 2026 uraXium, all rights reserved. You may use them and share unmodified exports; modifying or redistributing them requires prior permission from uraXium.
 - **Fonts:** Liberation Sans, [SIL Open Font License 1.1](assets/OFL.txt).
 - **Data credits:** waypoints from PFTracker; some ground layouts © [OpenStreetMap](https://www.openstreetmap.org/copyright) contributors (ODbL 1.0).

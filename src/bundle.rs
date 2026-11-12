@@ -1,3 +1,6 @@
+// OpenPlates — Copyright (C) 2026 uraXium
+// SPDX-License-Identifier: AGPL-3.0-only
+
 //! Reads the encrypted chart bundle compiled into the executable.
 //!
 //! Layout of `charts.bin`:

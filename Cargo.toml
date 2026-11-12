@@ -4,6 +4,7 @@ version = "1.0.0"
 edition = "2021"
 description = "OpenPlates - Project Flight charts for PC"
 authors = ["uraXium"]
+license = "AGPL-3.0-only"
 
 [dependencies]
 chacha20 = "0.10.2"

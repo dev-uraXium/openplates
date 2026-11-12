@@ -1,0 +1,20 @@
+OpenPlates
+Copyright (C) 2026 uraXium
+
+The OpenPlates source code is free software: you can redistribute it and/or
+modify it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, version 3 only (AGPL-3.0-only).
+See LICENSE.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for details.
+
+NOT COVERED BY THE AGPL:
+- The chart bundle distributed with official releases (charts.bin) and any
+  images exported from it: (C) 2026 uraXium, all rights reserved. You may use
+  the charts and share unmodified exports; modification or redistribution
+  requires prior written permission from uraXium.
+- The "OpenPlates" name and logo may not be used for modified versions
+  without permission.
+- Fonts in assets/: Liberation Sans, SIL Open Font License 1.1 (assets/OFL.txt).

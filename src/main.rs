@@ -1,4 +1,5 @@
-// OpenPlates for PC — © 2026 uraXium. All rights reserved.
+// OpenPlates for PC — Copyright (C) 2026 uraXium
+// SPDX-License-Identifier: AGPL-3.0-only
 #![cfg_attr(windows, windows_subsystem = "windows")]
 
 mod bundle;

@@ -1,3 +1,6 @@
+// OpenPlates — Copyright (C) 2026 uraXium
+// SPDX-License-Identifier: AGPL-3.0-only
+
 //! Copies the private chart bundle + key into OUT_DIR.
 //! If `private/` is missing (e.g. a fresh clone of the public repo), the app is
 //! built with an empty placeholder bundle and shows a notice on start-up.

@@ -1,4 +1,6 @@
 import json,os,zlib,struct,secrets
+# OpenPlates — Copyright (C) 2026 uraXium
+# SPDX-License-Identifier: AGPL-3.0-only
 from cryptography.hazmat.primitives.ciphers import Cipher,algorithms
 import os
 H=os.path.dirname(os.path.abspath(__file__));E=os.path.join(H,'export','');OUT=os.path.join(H,'private','')
