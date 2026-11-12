@@ -1,0 +1,4 @@
+/target
+# Encrypted chart bundle + key — never commit these
+/private/
+/export/

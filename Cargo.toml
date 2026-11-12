@@ -1,0 +1,22 @@
+[package]
+name = "openplates"
+version = "1.0.0"
+edition = "2021"
+description = "OpenPlates - Project Flight charts for PC"
+authors = ["uraXium"]
+
+[dependencies]
+chacha20 = "0.10.2"
+eframe = { version = "0.37.0", default-features = false, features = ["default_fonts", "glow", "wayland", "x11"] }
+flate2 = "1.1.11"
+resvg = "0.50.0"
+rfd = "0.18.0"
+serde = { version = "1.0.229", features = ["derive"] }
+serde_json = "1.0.154"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+strip = true
+panic = "abort"

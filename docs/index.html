@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OpenPlates: real-world-style charts for Project Flight</title>
+<meta name="description" content="Area, ground, SID and STAR charts for every Project Flight airport, drawn like real aviation charts. Free desktop app for Windows.">
+<meta property="og:title" content="OpenPlates">
+<meta property="og:description" content="Real-world-style aviation charts for Project Flight (Roblox). 872 charts, free, offline.">
+<meta property="og:image" content="img/area.png">
+<style>
+  :root{
+    --ink:#111; --paper:#fbfaf6; --land:#ece9e0; --muted:#5d5b55; --rule:#111; --accent:#2f7dd1;
+    --mono: ui-monospace, "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+    --sans: Arial, "Helvetica Neue", Helvetica, "Liberation Sans", sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.55 var(--sans)}
+  a{color:inherit}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+
+  /* chart-style frame */
+  .frame{border:2px solid var(--rule);background:#fff}
+  .titlebox{display:grid;grid-template-columns:auto 1fr auto;border-bottom:2px solid var(--rule)}
+  .titlebox .id{background:var(--ink);color:#fff;font-weight:700;font-size:34px;letter-spacing:.02em;padding:18px 26px;display:flex;align-items:center}
+  .titlebox .name{padding:14px 22px}
+  .titlebox .name small{display:block;font-size:11px;font-weight:700;letter-spacing:.14em}
+  .titlebox .name strong{display:block;font-size:26px;letter-spacing:.01em;text-transform:uppercase}
+  .titlebox .meta{padding:14px 22px;text-align:right;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;display:flex;flex-direction:column;justify-content:center}
+  .footline{display:flex;justify-content:space-between;gap:16px;border-top:2px solid var(--rule);padding:8px 14px;font-size:11px;letter-spacing:.06em;text-transform:uppercase}
+
+  nav.top{display:flex;justify-content:space-between;align-items:center;padding:18px 0}
+  nav.top .brand{font-weight:700;letter-spacing:.04em;text-decoration:none}
+  nav.top .brand span{background:var(--ink);color:#fff;padding:2px 6px;margin-right:8px}
+  nav.top ul{display:flex;gap:22px;list-style:none;margin:0;padding:0;font-size:14px}
+  nav.top a{text-decoration:none}
+  nav.top ul a:hover{text-decoration:underline}
+
+  /* hero */
+  .hero{padding:10px 0 40px}
+  .hero-body{display:grid;grid-template-columns:1fr 1.25fr;gap:0}
+  .hero-copy{padding:34px 30px;border-right:2px solid var(--rule);display:flex;flex-direction:column;justify-content:center}
+  .hero-copy h1{font-size:44px;line-height:1.05;margin:0 0 16px;letter-spacing:-.01em}
+  .hero-copy p{margin:0 0 24px;color:#2a2925;font-size:17px}
+  .btns{display:flex;gap:12px;flex-wrap:wrap}
+  .btn{display:inline-flex;align-items:center;gap:10px;padding:13px 20px;border:2px solid var(--ink);font-weight:700;text-decoration:none;font-size:15px;letter-spacing:.02em}
+  .btn.primary{background:var(--ink);color:#fff}
+  .btn.primary:hover{background:#333}
+  .btn:not(.primary):hover{background:var(--land)}
+  .fine{margin-top:14px;font-size:12.5px;color:var(--muted)}
+  .hero-shot{background:var(--land);padding:18px;display:flex;align-items:center}
+  .hero-shot img{width:100%;display:block;border:1px solid #000;box-shadow:0 10px 30px rgba(0,0,0,.18)}
+
+  /* sections */
+  section{padding:56px 0}
+  .label{font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  h2{font-size:30px;margin:0 0 18px;letter-spacing:-.01em}
+  .lede{max-width:680px;color:#2a2925;margin:0 0 28px}
+
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);border:2px solid var(--rule);background:#fff}
+  .stats div{padding:22px 22px;border-right:1px solid var(--rule)}
+  .stats div:last-child{border-right:0}
+  .stats b{display:block;font-size:38px;line-height:1}
+  .stats span{font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:2px solid var(--rule);background:#fff}
+  .feat{padding:24px;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+  .feat:nth-child(3n){border-right:0}
+  .feat:nth-last-child(-n+3){border-bottom:0}
+  .feat h3{margin:0 0 8px;font-size:17px;display:flex;align-items:center;gap:10px}
+  .feat h3 i{font-style:normal;font-family:var(--mono);font-size:11px;border:1.5px solid var(--ink);padding:1px 6px;letter-spacing:.06em}
+  .feat p{margin:0;color:#2a2925;font-size:15px}
+
+  .gallery{display:grid;grid-template-columns:repeat(2,1fr);gap:22px}
+  figure{margin:0}
+  figure img{width:100%;display:block;border:2px solid var(--rule);background:#fff}
+  figcaption{font-size:13px;color:var(--muted);margin-top:8px;font-family:var(--mono);letter-spacing:.04em}
+
+  .steps{counter-reset:s;display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  .step{border:2px solid var(--rule);background:#fff;padding:22px;position:relative}
+  .step::before{counter-increment:s;content:counter(s);position:absolute;top:-2px;left:-2px;background:var(--ink);color:#fff;font-weight:700;width:34px;height:34px;display:grid;place-items:center}
+  .step h3{margin:22px 0 8px;font-size:17px}
+  .step p{margin:0;font-size:15px;color:#2a2925}
+
+  table.keys{border-collapse:collapse;background:#fff;border:2px solid var(--rule);width:100%;max-width:640px}
+  table.keys td{border-bottom:1px solid #bbb;padding:10px 16px;font-size:15px}
+  table.keys tr:last-child td{border-bottom:0}
+  table.keys td:first-child{font-weight:700;width:38%}
+  kbd{font-family:var(--mono);font-size:12.5px;border:1.5px solid var(--ink);border-bottom-width:3px;padding:1px 6px;background:var(--paper)}
+
+  details{border:2px solid var(--rule);background:#fff;margin-bottom:-2px}
+  summary{cursor:pointer;padding:16px 20px;font-weight:700;list-style:none;display:flex;justify-content:space-between}
+  summary::after{content:"+";font-family:var(--mono)}
+  details[open] summary::after{content:"–"}
+  details p{margin:0;padding:0 20px 18px;color:#2a2925}
+
+  .oss{display:grid;grid-template-columns:1.2fr 1fr;gap:0}
+  .oss>div{padding:30px}
+  .oss>div+div{border-left:2px solid var(--rule);background:var(--land)}
+  pre{margin:0;font-family:var(--mono);font-size:13px;line-height:1.7;white-space:pre-wrap}
+
+  .warn{border:2px dashed var(--ink);padding:16px 20px;font-size:14px;background:#fff}
+  footer{padding:30px 0 50px;font-size:13px;color:var(--muted)}
+  footer .row{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+
+  @media (max-width:880px){
+    .hero-body,.oss{grid-template-columns:1fr}
+    .hero-copy{border-right:0;border-bottom:2px solid var(--rule)}
+    .oss>div+div{border-left:0;border-top:2px solid var(--rule)}
+    .grid3,.steps,.gallery{grid-template-columns:1fr}
+    .feat{border-right:0!important;border-bottom:1px solid var(--rule)!important}
+    .feat:last-child{border-bottom:0!important}
+    .stats{grid-template-columns:repeat(2,1fr)}
+    .stats div:nth-child(2){border-right:0}
+    .stats div:nth-child(-n+2){border-bottom:1px solid var(--rule)}
+    .titlebox{grid-template-columns:auto 1fr}
+    .titlebox .meta{display:none}
+    .hero-copy h1{font-size:34px}
+    nav.top ul{display:none}
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <nav class="top">
+    <a class="brand" href="#"><span>PF</span>OPENPLATES</a>
+    <ul>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#screens">Screenshots</a></li>
+      <li><a href="#how">How to use</a></li>
+      <li><a href="#faq">FAQ</a></li>
+      <li><a href="https://github.com/dev-uraXium/openplates">GitHub</a></li>
+    </ul>
+  </nav>
+
+  <header class="hero">
+    <div class="frame">
+      <div class="titlebox">
+        <div class="id">PF</div>
+        <div class="name"><small>OPENPLATES</small><strong>Charts for Project Flight</strong></div>
+        <div class="meta">Desktop app · Windows<br>Free &amp; open source</div>
+      </div>
+      <div class="hero-body">
+        <div class="hero-copy">
+          <h1>Real-world charts for a Roblox sky.</h1>
+          <p>Area charts, ground charts, SIDs and STARs for every Project Flight airport, drawn the way real ones look. Islands and terrain in black and white, runways where they really are, and PFTracker waypoints throughout.</p>
+          <div class="btns">
+            <a class="btn primary" href="https://github.com/dev-uraXium/openplates/releases/latest">Download for Windows</a>
+            <a class="btn" href="https://github.com/dev-uraXium/openplates">View source</a>
+          </div>
+          <div class="fine">One .exe, nothing to install, works offline · Windows 10/11 64-bit</div>
+        </div>
+        <div class="hero-shot"><img src="img/area.png" alt="OpenPlates showing the Project Flight area chart"></div>
+      </div>
+      <div class="footline"><span>Unofficial · for Project Flight only · not for real-world navigation</span><span>© 2026 uraXium</span></div>
+    </div>
+  </header>
+</div>
+
+<section>
+  <div class="wrap">
+    <div class="stats">
+      <div><b>872</b><span>charts</span></div>
+      <div><b>16</b><span>airports</span></div>
+      <div><b>5</b><span>regions</span></div>
+      <div><b>850</b><span>SID &amp; STAR charts</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="features" style="padding-top:10px">
+  <div class="wrap">
+    <p class="label">What it is</p>
+    <h2>Proper charts, not screenshots</h2>
+    <p class="lede">OpenPlates is a chart library for Project Flight pilots and ATC. Every chart is a clean vector drawing in the style of the real thing, so it stays sharp at any zoom and reads the way you'd expect.</p>
+    <div class="grid3">
+      <div class="feat"><h3><i>AREA</i> Area charts</h3><p>Each region and the whole map, with coastlines, shaded terrain, airports and every PFTracker waypoint.</p></div>
+      <div class="feat"><h3><i>GND</i> Ground charts</h3><p>Runways with idents, headings and dimensions, plus taxiways, aprons and buildings traced from the map.</p></div>
+      <div class="feat"><h3><i>SID</i> Departures</h3><p>Standard departures per runway, with initial climbs, turns and altitude restrictions, plus an overview chart per runway.</p></div>
+      <div class="feat"><h3><i>STAR</i> Arrivals</h3><p>Standard arrivals laid out the same way, so you can brief an arrival in seconds.</p></div>
+      <div class="feat"><h3><i>INFO</i> Airport info</h3><p>Elevation, frequencies, a runway table, and every procedure written out as text.</p></div>
+      <div class="feat"><h3><i>PNG</i> Export</h3><p>Save any chart as a high-resolution image for a second monitor, a tablet or a briefing.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="screens">
+  <div class="wrap">
+    <p class="label">Screenshots</p>
+    <h2>A look inside</h2>
+    <div class="gallery">
+      <figure><img src="img/ground.png" alt="EGKK ground chart" loading="lazy"><figcaption>EGKK · GROUND CHART</figcaption></figure>
+      <figure><img src="img/sid.png" alt="EGKK SIDs runway 26L" loading="lazy"><figcaption>EGKK · SIDS · RWY 26L OVERVIEW</figcaption></figure>
+      <figure><img src="img/zoom.png" alt="Zoomed in to 800%" loading="lazy"><figcaption>ZOOMED TO 800% · STILL SHARP</figcaption></figure>
+      <figure><img src="img/info.png" alt="PAFA airport info" loading="lazy"><figcaption>PAFA · AIRPORT INFO</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <p class="label">How to use</p>
+    <h2>Up and running in a minute</h2>
+    <div class="steps">
+      <div class="step"><h3>Download</h3><p>Grab <b>OpenPlates.exe</b> from the latest GitHub release. Put it anywhere you like.</p></div>
+      <div class="step"><h3>Open it</h3><p>Double-click. If Windows says "Windows protected your PC", click <b>More info → Run anyway</b>. That shows up because the app isn't code-signed.</p></div>
+      <div class="step"><h3>Pick a chart</h3><p>Choose an airport in the sidebar or search by ICAO, name or procedure. Use the tabs for Ground, SIDs, STARs and Info.</p></div>
+    </div>
+    <div style="height:28px"></div>
+    <table class="keys">
+      <tr><td>Zoom</td><td>Mouse wheel, trackpad pinch, or <kbd>+</kbd> / <kbd>-</kbd></td></tr>
+      <tr><td>Pan</td><td>Click and drag</td></tr>
+      <tr><td>Fit to window</td><td>Double-click, or <kbd>Fit</kbd></td></tr>
+      <tr><td>Save as image</td><td><kbd>Export PNG</kbd></td></tr>
+      <tr><td>Find a procedure</td><td>Type its name in search, e.g. <kbd>WIZAD</kbd></td></tr>
+    </table>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="frame oss">
+      <div>
+        <p class="label">Open source</p>
+        <h2>Built in the open</h2>
+        <p style="margin:0 0 14px">The app is written in Rust with egui and resvg, and its source is on GitHub under the MIT license. Bug reports, ideas and pull requests are welcome.</p>
+        <p style="margin:0 0 20px">The charts themselves are © uraXium and ship inside the official release, encrypted, so the data isn't sitting in plain view.</p>
+        <a class="btn" href="https://github.com/dev-uraXium/openplates">github.com/dev-uraXium/openplates</a>
+      </div>
+      <div>
+<pre>$ git clone https://github.com/dev-uraXium/openplates
+$ cd openplates
+$ cargo build --release
+
+# src/main.rs    UI
+# src/render.rs  SVG → pixels
+# src/bundle.rs  encrypted chart bundle</pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="wrap">
+    <p class="label">FAQ</p>
+    <h2>Questions</h2>
+    <details><summary>Is this official?</summary><p>No. OpenPlates is a fan project. It isn't affiliated with or endorsed by Project Flight or Roblox.</p></details>
+    <details><summary>Are the SIDs and STARs the real-world ones?</summary><p>No. Real procedures don't fit Project Flight's compressed geography, so they're designed for Project Flight, using real fix names where those fixes exist on the map. They're marked "community procedure" on every chart.</p></details>
+    <details><summary>Can I use these for real flying?</summary><p>Absolutely not. They're for simulation in Project Flight only.</p></details>
+    <details><summary>Can I share the charts?</summary><p>You can share exported images unchanged. Modifying them or redistributing them as your own needs permission from uraXium.</p></details>
+    <details><summary>Mac or Linux?</summary><p>Official builds are Windows-only for now. The app is cross-platform Rust, so macOS and Linux builds may come later.</p></details>
+    <details><summary>Something on a chart is wrong</summary><p>Open an issue on GitHub with the airport, chart name and what's off. A screenshot helps a lot.</p></details>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="warn">⚠ Unofficial charts for the Roblox game Project Flight. For simulation only. Never use for real-world navigation.</div>
+</div>
+
+<footer>
+  <div class="wrap row">
+    <span>© 2026 uraXium · Charts: all rights reserved · Code: MIT</span>
+    <span>Waypoints: PFTracker · Some ground data © OpenStreetMap contributors (ODbL)</span>
+  </div>
+</footer>
+
+</body>
+</html>
